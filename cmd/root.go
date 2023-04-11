@@ -6,7 +6,7 @@ import (
 
 var (
 	rootCmd = &cobra.Command{
-		Use:   "deploy-drop [command] [...args]",
+		Use:   "deploy-drop",
 		Short: "A CLI for automatic removal of deployments on Github.",
 		Long: `Remove deployments of unused projects on Github. Uses official Github API & it's token to accomplish the task. `,
 	}
