@@ -1,24 +1,14 @@
 package utility
 
 import (
-	"net/http"
-	"net/url"
+	"fmt"
+
+	"github.com/Abhishek-Dobliyal/deploy-drop/model"
 )
 
-func ParseURL(repoUrl string) (*string, error) {
-	u, err := url.ParseRequestURI(repoUrl)
-	if err != nil {
-		return nil, err
-	}
+func SendRequest(data model.Data) {
+	url := fmt.Sprintf("https://api.github.com/repos/%s/%s/deployments", data.GithubHandle, data.RepoName)
+	authHeader := fmt.Sprintf("bearer %s", data.Token)
 
-	uString := u.String()
-	return &uString, nil
-}
-
-func SendRequest(parsedUrl, method string) (*http.Response, error) {
-	resp, err := http.Post(parsedUrl, method, nil)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
+	fmt.Println(url, authHeader)
 }
