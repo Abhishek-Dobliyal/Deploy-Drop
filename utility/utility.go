@@ -9,12 +9,19 @@ import (
 )
 
 func SendRequest(data model.Data) (*string, error) {
-	var deployments []model.Deployment
-
+	var (
+		deployments []model.Deployment
+		client      http.Client
+	)
 	allDeploymentsUrl := fmt.Sprintf("https://api.github.com/repos/%s/%s/deployments", data.GithubHandle, data.RepoName)
 	// authHeader := fmt.Sprintf("bearer %s", data.Token)
 
-	resp, err := http.Get(allDeploymentsUrl)
+	req, err := http.NewRequest("GET", allDeploymentsUrl, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error creating request. Error: %s", err.Error())
+	}
+
+	resp, err := client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("error sending request. Error: %s", err.Error())
 	}
@@ -25,6 +32,14 @@ func SendRequest(data model.Data) (*string, error) {
 	err = json.NewDecoder(resp.Body).Decode(&deployments)
 	if err != nil {
 		return nil, fmt.Errorf("error decoding response. Error: %s", err.Error())
+	}
+	defer resp.Body.Close()
+
+	if data.DeploymentId == nil {
+		for _, deployment := range deployments {
+			deleteDeploymentUrl := fmt.Sprintf("%s/%d", allDeploymentsUrl, deployment.ID)
+			fmt.Println(deleteDeploymentUrl)
+		}
 	}
 	return nil, nil
 }
