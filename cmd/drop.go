@@ -1,14 +1,13 @@
 package cmd
 
 import (
-
-	"github.com/Abhishek-Dobliyal/deploy-drop/utility"
 	"github.com/Abhishek-Dobliyal/deploy-drop/model"
+	"github.com/Abhishek-Dobliyal/deploy-drop/utility"
 
 	"github.com/spf13/cobra"
 )
 
-const LONG_DESC = "Drops any deployment(s) associated with the given repository.\nPass Repository URL & Github Token as flags. Make sure the token is read_deployments authorized."
+const LONG_DESC = "Drops any deployment(s) associated with the given repository.\nRequires Github handle, Repository name & Github token as flags. Make sure the token is read_deployments authorized."
 
 var (
 	GithubHandle string
@@ -27,7 +26,6 @@ var (
 				Token:        Token,
 				DeploymentId: DeploymentId,
 			}
-
 			utility.SendRequest(data)
 		},
 	}
@@ -36,8 +34,8 @@ var (
 func init() {
 	drop.Flags().StringVarP(&GithubHandle, "handle", "", "", "Github Repository Link (Required)")
 	drop.Flags().StringVarP(&Token, "token", "t", "", "Github Token (Required, read_deployments authorized)")
-	drop.Flags().StringVarP(&RepoName, "repo", "r", "", "Github Token (Required, read_deployments authorized)")
-	drop.Flags().StringSliceVar(&DeploymentId, "ids", nil, "Github Token (Required, read_deployments authorized)")
+	drop.Flags().StringVarP(&RepoName, "repo", "r", "", "Repository Name (Required)")
+	drop.Flags().StringSliceVar(&DeploymentId, "ids", nil, "Deployment Id of the deployment to drop, (Optional, If not specified all the associated deployments will be dropped)")
 
 	drop.MarkFlagRequired("url")
 	drop.MarkFlagRequired("token")
