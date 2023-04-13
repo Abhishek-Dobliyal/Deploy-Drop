@@ -8,8 +8,20 @@ import (
 	"github.com/Abhishek-Dobliyal/deploy-drop/model"
 )
 
-func dropDeployment(client http.Client, deploymentUrl string) {
+func dropDeployment(client http.Client, authHeader, deploymentUrl string) error {
+	req, err := http.NewRequest("DELETE", deploymentUrl, nil)
+	if err != nil {
+		return fmt.Errorf("error creating deletion request. error: %s", err.Error())
+	}
+	req.Header.Add("Authorization", authHeader)
 
+	resp, err := client.Do(req)
+	if err != nil {
+		return fmt.Errorf("error deleting deployment. error: %s", err.Error())
+	}
+	defer resp.Body.Close()
+
+	return nil
 }
 
 func SendRequest(data model.Data) ([]*model.Deployment, error) {
@@ -18,7 +30,7 @@ func SendRequest(data model.Data) ([]*model.Deployment, error) {
 		client      http.Client
 	)
 	allDeploymentsUrl := fmt.Sprintf("https://api.github.com/repos/%s/%s/deployments", data.GithubHandle, data.RepoName)
-	// authHeader := fmt.Sprintf("bearer %s", data.Token)
+	authHeader := fmt.Sprintf("bearer %s", data.Token)
 
 	req, err := http.NewRequest("GET", allDeploymentsUrl, nil)
 	if err != nil {
@@ -45,7 +57,11 @@ func SendRequest(data model.Data) ([]*model.Deployment, error) {
 		}
 		for _, deployment := range deployments {
 			deploymentUrl := fmt.Sprintf("%s/%d", allDeploymentsUrl, deployment.ID)
-			dropDeployment(client, deploymentUrl)
+			err := dropDeployment(client, authHeader, deploymentUrl)
+			if err != nil {
+				fmt.Println(err.Error())
+			}
+
 		}
 	}
 	return nil, nil
