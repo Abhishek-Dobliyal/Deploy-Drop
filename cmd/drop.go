@@ -13,7 +13,7 @@ var (
 	GithubHandle string
 	RepoName     string
 	Token        string
-	DeploymentId []string
+	DeploymentId []int
 
 	drop = &cobra.Command{
 		Use:   "drop",
@@ -32,10 +32,10 @@ var (
 )
 
 func init() {
-	drop.Flags().StringVarP(&GithubHandle, "handle", "", "", "Github Repository Link (Required)")
+	drop.Flags().StringVarP(&GithubHandle, "handle", "u", "", "Github Repository Link (Required)")
 	drop.Flags().StringVarP(&Token, "token", "t", "", "Github Token (Required, read_deployments authorized)")
 	drop.Flags().StringVarP(&RepoName, "repo", "r", "", "Repository Name (Required)")
-	drop.Flags().StringSliceVar(&DeploymentId, "ids", nil, "Deployment Id of the deployment to drop, (Optional, If not specified all the associated deployments will be dropped)")
+	drop.Flags().IntSliceVarP(&DeploymentId, "ids", "i", nil, "Deployment Id of the deployment to drop, (Optional, If not specified all the associated deployments will be dropped)")
 
 	drop.MarkFlagRequired("url")
 	drop.MarkFlagRequired("token")

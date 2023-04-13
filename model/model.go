@@ -2,7 +2,7 @@ package model
 
 type Data struct {
 	GithubHandle, RepoName, Token string
-	DeploymentId                  []string
+	DeploymentId                  []int
 	DeleteAll                     bool
 }
 
