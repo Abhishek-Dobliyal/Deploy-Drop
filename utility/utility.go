@@ -24,6 +24,15 @@ func dropDeployment(client http.Client, authHeader, deploymentUrl string) error 
 	return nil
 }
 
+func contains(deployment []model.Deployment, target int) bool {
+	for _, data := range deployment {
+		if data.ID == target {
+			return true
+		}
+	}
+	return false
+}
+
 func SendRequest(data model.Data) ([]*model.Deployment, error) {
 	var (
 		deployments []model.Deployment
@@ -51,10 +60,11 @@ func SendRequest(data model.Data) ([]*model.Deployment, error) {
 	}
 	defer resp.Body.Close()
 
+	if len(deployments) == 0 {
+		return nil, fmt.Errorf("error locating deployments. no deployments found")
+	}
+
 	if data.DeploymentId == nil {
-		if len(deployments) == 0 {
-			return nil, fmt.Errorf("error locating deployments. no deployments found")
-		}
 		for _, deployment := range deployments {
 			deploymentUrl := fmt.Sprintf("%s/%d", allDeploymentsUrl, deployment.ID)
 			err := dropDeployment(client, authHeader, deploymentUrl)
@@ -62,6 +72,16 @@ func SendRequest(data model.Data) ([]*model.Deployment, error) {
 				fmt.Println(err.Error())
 			}
 
+		}
+	} else {
+		for _, deploymentId := range data.DeploymentId {
+			if contains(deployments, deploymentId) {
+				deploymentUrl := fmt.Sprintf("%s/%d", allDeploymentsUrl, deploymentId)
+				err := dropDeployment(client, authHeader, deploymentUrl)
+				if err != nil {
+					fmt.Println(err.Error())
+				}
+			}
 		}
 	}
 	return nil, nil
