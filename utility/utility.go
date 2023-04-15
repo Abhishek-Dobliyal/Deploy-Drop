@@ -33,13 +33,17 @@ func contains(deployment []model.Deployment, target int) bool {
 	return false
 }
 
-func SendRequest(data model.Data) ([]*model.Deployment, error) {
+func SearchDeployment(data model.Data) ([]*model.Deployment, error) {
+	return nil, nil
+}
+
+func DropDeployment(data model.Data) ([]*model.Deployment, error) {
 	var (
 		deployments []model.Deployment
 		client      http.Client
 	)
-	allDeploymentsUrl := fmt.Sprintf("https://api.github.com/repos/%s/%s/deployments", data.GithubHandle, data.RepoName)
-	authHeader := fmt.Sprintf("bearer %s", data.Token)
+	allDeploymentsUrl := fmt.Sprintf("https://api.github.com/repos/%s/%s/deployments", *data.GithubHandle, *data.RepoName)
+	authHeader := fmt.Sprintf("bearer %s", *data.Token)
 
 	req, err := http.NewRequest("GET", allDeploymentsUrl, nil)
 	if err != nil {
@@ -64,14 +68,18 @@ func SendRequest(data model.Data) ([]*model.Deployment, error) {
 		return nil, fmt.Errorf("error locating deployments. no deployments found")
 	}
 
+	dropped := []*model.Deployment{}
+	droppedDeploymentIds := []int{}
+
 	if data.DeploymentId == nil {
 		for _, deployment := range deployments {
 			deploymentUrl := fmt.Sprintf("%s/%d", allDeploymentsUrl, deployment.ID)
 			err := dropDeployment(client, authHeader, deploymentUrl)
 			if err != nil {
 				fmt.Println(err.Error())
+			} else {
+				droppedDeploymentIds = append(droppedDeploymentIds, deployment.ID)
 			}
-
 		}
 	} else {
 		for _, deploymentId := range data.DeploymentId {
@@ -80,9 +88,22 @@ func SendRequest(data model.Data) ([]*model.Deployment, error) {
 				err := dropDeployment(client, authHeader, deploymentUrl)
 				if err != nil {
 					fmt.Println(err.Error())
+				} else {
+					droppedDeploymentIds = append(droppedDeploymentIds, deploymentId)
 				}
 			}
 		}
+
 	}
-	return nil, nil
+
+	for _, id := range droppedDeploymentIds {
+		for _, data := range deployments {
+			if id == data.ID {
+				dropped = append(dropped, &data)
+				break
+			}
+		}
+	}
+
+	return dropped, nil
 }
