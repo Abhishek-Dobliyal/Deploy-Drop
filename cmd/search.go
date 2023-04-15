@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/Abhishek-Dobliyal/deploy-drop/model"
 	"github.com/Abhishek-Dobliyal/deploy-drop/utility"
 
@@ -20,11 +22,24 @@ var (
 				GithubHandle: &githubHandleSearch,
 				RepoName:     &repoNameSearch,
 			}
-			utility.DropDeployment(data)
+
+			deployments, err := utility.SearchDeployment(data)
+			if err != nil {
+				fmt.Println(err.Error())
+				return
+			}
+
+			fmt.Println(deployments)
 		},
 	}
 )
 
 func init() {
+	search.Flags().StringVarP(&githubHandleSearch, "handle", "u", "", "Github Repository Link (Required)")
+	search.Flags().StringVarP(&repoNameDrop, "repo", "r", "", "Repository Name (Required)")
+
+	search.MarkFlagRequired("handle")
+	search.MarkFlagRequired("repo")
+
 	rootCmd.AddCommand(search)
 }
