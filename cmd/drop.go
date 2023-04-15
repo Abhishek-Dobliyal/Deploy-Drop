@@ -37,10 +37,10 @@ var (
 )
 
 func init() {
-	drop.Flags().StringVarP(&githubHandleDrop, "handle", "u", "", "Github Repository Link (Required)")
-	drop.Flags().StringVarP(&token, "token", "t", "", "Github Token (Required, read_deployments authorized)")
-	drop.Flags().StringVarP(&repoNameDrop, "repo", "r", "", "Repository Name (Required)")
-	drop.Flags().IntSliceVarP(&deploymendIdDrop, "ids", "i", nil, "Deployment Id of the deployment to drop, (Optional, If not specified all the associated deployments will be dropped)")
+	drop.Flags().StringVarP(&githubHandleDrop, "handle", "u", "", fmt.Sprintf("%s %s", Cyan("Github Handle"), Red("(Required)")))
+	drop.Flags().StringVarP(&token, "token", "t", "", fmt.Sprintf("%s %s %s", Cyan("Github Token (Required"), Yellow("read_deployments"), Cyan("authorized)")))
+	drop.Flags().StringVarP(&repoNameDrop, "repo", "r", "", fmt.Sprintf("%s %s", Cyan("Repository Name"), Red("(Required)")))
+	drop.Flags().IntSliceVarP(&deploymendIdDrop, "ids", "i", nil, fmt.Sprintf("%s %s", Cyan("Deployment Id of the deployment to drop,"), Red("(Optional, If not specified all the associated deployments will be dropped)")))
 
 	drop.MarkFlagRequired("url")
 	drop.MarkFlagRequired("token")

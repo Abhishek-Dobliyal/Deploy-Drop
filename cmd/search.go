@@ -35,8 +35,8 @@ var (
 )
 
 func init() {
-	search.Flags().StringVarP(&githubHandleSearch, "handle", "u", "", "Github Repository Link (Required)")
-	search.Flags().StringVarP(&repoNameDrop, "repo", "r", "", "Repository Name (Required)")
+	search.Flags().StringVarP(&githubHandleSearch, "handle", "u", "", fmt.Sprintf("%s %s", Cyan("Github Handle"), Red("(Required)")))
+	search.Flags().StringVarP(&repoNameDrop, "repo", "r", "", fmt.Sprintf("%s %s", Cyan("Repository Name"), Red("(Required)")))
 
 	search.MarkFlagRequired("handle")
 	search.MarkFlagRequired("repo")
