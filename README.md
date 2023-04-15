@@ -29,4 +29,8 @@ go run main.go
 go build
 ```
 
-> Note: If you are new to GoLang and want to implement this project from scratch, It is highly recommended to read through [this](https://www.digitalocean.com/community/tutorials/how-to-use-go-modules) article.
+> If you are new to GoLang and want to implement this project from scratch, It is highly recommended to read through [this](https://www.digitalocean.com/community/tutorials/how-to-use-go-modules) article.
+
+### Note
+- Kindly do not move, delete, rename or modify any files (unless you know what you are doing).
+- Feel free to make enhancements and raise a PR.
