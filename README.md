@@ -25,7 +25,7 @@ go run main.go
 
 - To create an executable, type in:
 
-```go
+```bash
 go build
 ```
 
