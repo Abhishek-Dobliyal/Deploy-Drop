@@ -6,7 +6,7 @@ type Data struct {
 }
 
 type Deployment struct {
-	ID          int    `json:"id"`
-	Environment string `json:"original_environment"`
-	CreatedAt   string `json:"created_at"`
+	ID          int    `json:"id" header:"id"`
+	Environment string `json:"original_environment" header:"environment"`
+	CreatedAt   string `json:"created_at" header:"created_at"`
 }

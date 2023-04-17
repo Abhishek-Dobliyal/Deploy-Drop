@@ -5,7 +5,6 @@ import (
 
 	"github.com/Abhishek-Dobliyal/deploy-drop/model"
 	"github.com/Abhishek-Dobliyal/deploy-drop/utility"
-
 	"github.com/spf13/cobra"
 )
 
@@ -28,8 +27,8 @@ var (
 				fmt.Println(err.Error())
 				return
 			}
-
-			fmt.Println(deployments)
+			fmt.Printf("\n%s\n", Yellow("The following deployments were dropped:"))
+			Printer.Print(deployments)
 		},
 	}
 )
