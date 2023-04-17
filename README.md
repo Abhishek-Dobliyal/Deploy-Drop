@@ -3,6 +3,7 @@ A command-line utility to remove all deployments from a (inactive) github reposi
 
 ![](assets/screenshot.png)
 ![](assets/drop-ss.png)
+![](assets/dropped-ss.png)
 
 ### Installation & Dependencies
 
